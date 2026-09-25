@@ -11,7 +11,7 @@ from pathlib import Path
 CONTAINER = os.environ.get("BAIDU_CONTAINER", "baidunetdisk")
 ROOT = Path(__file__).resolve().parent.parent
 DOWNLOAD_ROOT = Path(os.environ.get("BAIDU_DOWNLOAD_ROOT", "/home/sun/downloads"))
-CONTAINER_EVAL = "/config/internal_api/inspector_eval.py"
+INSPECTOR_SCRIPT = Path(__file__).with_name("inspector_eval.py")
 APP_EXPR = "process.mainModule.require('electron').app"
 EVAL_LOCK = threading.Lock()
 
@@ -61,7 +61,8 @@ def evaluate(expression, timeout=30):
     with EVAL_LOCK:
         ensure_inspector()
         output = docker(
-            "exec", "-i", CONTAINER, "python3", CONTAINER_EVAL,
+            "exec", "-i", CONTAINER, "python3", "-c",
+            INSPECTOR_SCRIPT.read_text(encoding="utf-8"),
             input_text=json.dumps({"expression": expression}, ensure_ascii=False),
             timeout=timeout,
         )

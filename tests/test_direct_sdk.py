@@ -33,9 +33,11 @@ class DirectSdkTest(unittest.TestCase):
             self.assertEqual(desktop_bridge.evaluate("1 + 1"), {"count": 0})
         ensure_inspector.assert_called_once_with()
         self.assertEqual(
-            docker.call_args.args,
-            ("exec", "-i", desktop_bridge.CONTAINER, "python3", desktop_bridge.CONTAINER_EVAL),
+            docker.call_args.args[:5],
+            ("exec", "-i", desktop_bridge.CONTAINER, "python3", "-c"),
         )
+        self.assertIn("def connect_inspector():", docker.call_args.args[5])
+        self.assertNotIn("/config/internal_api/inspector_eval.py", docker.call_args.args)
         self.assertEqual(json.loads(docker.call_args.kwargs["input_text"]), {"expression": "1 + 1"})
 
 
