@@ -1,0 +1,10 @@
+*
+!/.gitignore
+!/README.md
+!/baidunetdisk.py
+!/internal_api/
+!/internal_api/__init__.py
+!/internal_api/desktop_bridge.py
+!/internal_api/inspector_eval.py
+!/tests/
+!/tests/test_direct_sdk.py
